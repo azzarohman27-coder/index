@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Untuk Kamu, Pagi Ini.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-warm: #efe7dc;
+      --cover-color: #2f3e34;
+      --cover-accent: #d4b483;
+      --paper-bg: #fcf9f2;
+      --paper-line: #ebe3d5;
+      --ink-main: #2c2825;
+      --ink-soft: #635b52;
+      --ribbon-color: #a64b3b;
+      --shadow-book: 0 22px 45px rgba(34, 26, 18, 0.25), 0 6px 15px rgba(34, 26, 18, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at 25% 20%, #fbf6ee 0%, var(--bg-warm) 65%, #e2d5c3 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Lora', Georgia, serif;
+      color: var(--ink-main);
+      overflow-x: hidden;
+      padding: 18px 16px;
+      position: relative;
+    }
+
+    /* Efek cahaya matahari pagi lembut */
+    .sunlight {
+      position: fixed;
+      top: -120px;
+      left: -80px;
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle, rgba(255, 236, 194, 0.65) 0%, rgba(255, 236, 194, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+      animation: breatheLight 7s ease-in-out infinite alternate;
+    }
+
+    @keyframes breatheLight {
+      0% { transform: scale(1) translate(0, 0); opacity: 0.75; }
+      100% { transform: scale(1.12) translate(15px, 10px); opacity: 1; }
+    }
+
+    /* PEMUTAR MUSIK MINI ALA PIRINGAN HITAM */
+    .music-bar {
+      width: 100%;
+      max-width: 390px;
+      background: rgba(252, 249, 242, 0.88);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(47, 62, 52, 0.18);
+      border-radius: 99px;
+      padding: 8px 14px 8px 10px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 8px 20px rgba(34, 26, 18, 0.08);
+      z-index: 2;
+    }
+
+    .music-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .vinyl {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #e5c158 0 22%, #2c2825 24% 48%, #3d3733 50% 53%, #1e1b18 55% 100%);
+      flex-shrink: 0;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+      animation: spinVinyl 6s linear infinite;
+      animation-play-state: paused;
+    }
+
+    .vinyl.playing {
+      animation-play-state: running;
+    }
+
+    .vinyl::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--paper-bg);
+    }
+
+    @keyframes spinVinyl {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .song-meta {
+      min-width: 0;
+    }
+
+    .song-title {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--ink-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .song-sub {
+      font-size: 0.7rem;
+      color: var(--ink-soft);
+      font-style: italic;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .music-btn {
+      background: var(--cover-color);
+      color: #f6e7cb;
+      border: none;
+      border-radius: 99px;
+      padding: 6px 14px;
+      font-family: 'Lora', serif;
+      font-size: 0.76rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s ease, transform 0.15s ease;
+    }
+
+    .music-btn:hover {
+      background: #233027;
+    }
+
+    .music-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* BUKU 3D */
+    .scene {
+      width: 100%;
+      max-width: 390px;
+      height: 530px;
+      perspective: 1800px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .book {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      border-radius: 6px 16px 16px 6px;
+      box-shadow: var(--shadow-book);
+      background: var(--cover-color);
+    }
+
+    .ribbon {
+      position: absolute;
+      top: -10px;
+      right: 34px;
+      width: 18px;
+      height: 46px;
+      background: var(--ribbon-color);
+      border-radius: 2px 2px 0 0;
+      z-index: 50;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .ribbon::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      border-left: 9px solid var(--ribbon-color);
+      border-right: 9px solid var(--ribbon-color);
+      border-bottom: 8px solid transparent;
+    }
+
+    .page {
+      position: absolute;
+      inset: 0;
+      transform-origin: left center;
+      transform-style: preserve-3d;
+      transition: transform 0.85s cubic-bezier(0.645, 0.045, 0.355, 1);
+      cursor: pointer;
+    }
+
+    .page.flipped {
+      transform: rotateY(-178deg);
+    }
+
+    .face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 4px 14px 14px 4px;
+      overflow: hidden;
+    }
+
+    .face.back {
+      transform: rotateY(180deg);
+      background-color: #f4efe4;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 27px,
+        var(--paper-line) 28px
+      );
+      border-radius: 14px 4px 4px 14px;
+      box-shadow: inset -12px 0 24px rgba(0, 0, 0, 0.07);
+    }
+
+    /* SAMPUL DEPAN */
+    .cover-front {
+      background: linear-gradient(145deg, #35473b 0%, #26332a 100%);
+      color: var(--cover-accent);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 34px 26px;
+      box-shadow:
+        inset 14px 0 24px rgba(0, 0, 0, 0.35),
+        inset 0 0 0 1px rgba(212, 180, 131, 0.2);
+    }
+
+    .cover-front::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 16px;
+      width: 2px;
+      background: rgba(0, 0, 0, 0.35);
+      box-shadow: 1px 0 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .cover-frame {
+      border: 1.5px solid rgba(212, 180, 131, 0.45);
+      border-radius: 8px;
+      height: 100%;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .cover-tag {
+      font-size: 0.72rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+
+    .cover-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.1rem;
+      line-height: 1.25;
+      font-weight: 700;
+      color: #f3dfb9;
+      margin: 12px 0;
+    }
+
+    .cover-subtitle {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: rgba(243, 223, 185, 0.82);
+      font-style: italic;
+      max-width: 235px;
+    }
+
+    .cover-hint {
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      padding: 8px 18px;
+      border: 1px solid rgba(212, 180, 131, 0.4);
+      border-radius: 99px;
+      color: #f3dfb9;
+      animation: pulseHint 2.2s infinite;
+    }
+
+    @keyframes pulseHint {
+      0%, 100% { opacity: 0.65; transform: translateX(0); }
+      50% { opacity: 1; transform: translateX(3px); }
+    }
+
+    /* HALAMAN KERTAS ISI */
+    .paper-front {
+      background-color: var(--paper-bg);
+      background-image:
+        linear-gradient(90deg, rgba(166, 75, 59, 0.14) 0px, rgba(166, 75, 59, 0.14) 1px, transparent 1px),
+        repeating-linear-gradient(to bottom, transparent 0px, transparent 27px, var(--paper-line) 28px);
+      background-position: 34px 0, 0 54px;
+      padding: 30px 25px 24px 46px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow:
+        inset 16px 0 25px -10px rgba(44, 34, 24, 0.14),
+        inset -2px 0 5px rgba(0, 0, 0, 0.04);
+    }
+
+    .chapter-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--ribbon-color);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .page-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.38rem;
+      line-height: 1.3;
+      color: var(--ink-main);
+      margin-bottom: 16px;
+    }
+
+    .page-text {
+      font-size: 0.92rem;
+      line-height: 1.8;
+      color: var(--ink-main);
+      margin-bottom: 13px;
+    }
+
+    .handwritten {
+      font-family: 'Caveat', cursive;
+      font-size: 1.3rem;
+      line-height: 1.35;
+      color: var(--ribbon-color);
+      transform: rotate(-1.5deg);
+      margin-top: 6px;
+      padding: 8px 12px;
+      background: rgba(235, 227, 213, 0.45);
+      border-left: 2px solid var(--ribbon-color);
+      border-radius: 0 6px 6px 0;
+    }
+
+    .page-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.76rem;
+      color: var(--ink-soft);
+      padding-top: 10px;
+      border-top: 1px dashed rgba(99, 91, 82, 0.25);
+    }
+
+    .secret-btn {
+      margin-top: 8px;
+      width: 100%;
+      padding: 11px 16px;
+      background: var(--cover-color);
+      color: #f8eedc;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Lora', serif;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.25s ease, transform 0.15s ease;
+    }
+
+    .secret-btn:hover {
+      background: #233027;
+    }
+
+    .secret-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* NAVIGASI BAWAH */
+    .controls {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 2;
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(47, 62, 52, 0.2);
+      color: var(--cover-color);
+      padding: 8px 16px;
+      border-radius: 99px;
+      font-family: 'Lora', serif;
+      font-size: 0.84rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: var(--cover-color);
+      color: #fff;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .page-indicator {
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+      min-width: 72px;
+      text-align: center;
+    }
+
+    /* MODAL CATATAN TAMBAHAN */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 22, 17, 0.55);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 100;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .note-card {
+      background: #fffdf7;
+      max-width: 330px;
+      width: 100%;
+      padding: 28px 24px;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+      text-align: center;
+      transform: translateY(14px);
+      transition: transform 0.3s ease;
+      border: 1px solid #e6dccb;
+    }
+
+    .modal-overlay.active .note-card {
+      transform: translateY(0);
+    }
+
+    .note-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+      color: var(--cover-color);
+    }
+
+    .note-card p {
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: var(--ink-main);
+      margin-bottom: 18px;
+    }
+
+    .close-note {
+      background: var(--ribbon-color);
+      color: #fff;
+      border: none;
+      padding: 8px 22px;
+      border-radius: 99px;
+      font-family: 'Lora', serif;
+      font-size: 0.84rem;
+      cursor: pointer;
+    }
+
+    /* Wadah tersembunyi untuk audio background */
+    .hidden-audio {
+      position: fixed;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+      bottom: 0;
+      left: 0;
+    }
+
+    @media (max-width: 420px) {
+      .scene {
+        height: 500px;
+      }
+      .cover-title {
+        font-size: 1.85rem;
+      }
+      .page-text {
+        font-size: 0.89rem;
+        line-height: 1.72;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sunlight"></div>
+
+  <!-- PEMUTAR MUSIK LATAR -->
+  <div class="music-bar">
+    <div class="music-info">
+      <div class="vinyl" id="vinylDisc"></div>
+      <div class="song-meta">
+        <div class="song-title">Yellow — Coldplay</div>
+        <div class="song-sub" id="musicStatus">"Look at the stars, look how they shine for you..."</div>
+      </div>
+    </div>
+    <button class="music-btn" id="musicToggleBtn">▶ Putar</button>
+  </div>
+
+  <!-- Audio lokal opsional (jika ada file lagu.mp3 di folder yang sama) -->
+  <audio id="localAudio" src="lagu.mp3" loop preload="metadata"></audio>
+  <!-- Player YouTube tersembunyi -->
+  <div class="hidden-audio"><div id="ytPlayer"></div></div>
+
+  <!-- BUKU -->
+  <div class="scene">
+    <div class="book" id="book">
+      <div class="ribbon"></div>
+
+      <!-- SAMPUL -->
+      <div class="page" data-index="0" style="z-index: 5;">
+        <div class="face cover-front">
+          <div class="cover-frame">
+            <span class="cover-tag">Edisi Pagi Ini</span>
+            <div>
+              <h1 class="cover-title">Untuk Kamu,<br>Pagi Ini.</h1>
+              <p class="cover-subtitle">Sebuah buku kecil yang nggak perlu kamu kerjakan kayak tugas kuliah.</p>
+            </div>
+            <span class="cover-hint">Buka Halaman →</span>
+          </div>
+        </div>
+        <div class="face back"></div>
+      </div>
+
+      <!-- HALAMAN 1 -->
+      <div class="page" data-index="1" style="z-index: 4;">
+        <div class="face paper-front">
+          <div>
+            <div class="chapter-label">Bab I • Selamat Pagi</div>
+            <h2 class="page-heading">Tarik napas dulu sebelum hari dimulai.</h2>
+            <p class="page-text">
+              Selamat pagi Anne. Sebelum kmu makan, atau mikir penelitianmu😅, atau berhadapan lagi sama realita hidup yang rasanya kek ajg wkwk.
+            </p>
+            <p class="page-text">
+              Aku tahu belakangan ini kamu lagi berat banget. Capek sama urusan kampus , ditambah kadang driver gofood kek babi wkwk kadang juga cwo mu yang bikin kmu gk mood wkwk
+            </p>
+            <div class="handwritten">
+              "Look at the stars, look how they shine for you. Kamu nggak harus selalu kelihatan kuat."
+            </div>
+          </div>
+          <div class="page-footer">
+            <span>Halaman 1</span>
+            <span>Ketuk untuk lanjut →</span>
+          </div>
+        </div>
+        <div class="face back"></div>
+      </div>
+
+      <!-- HALAMAN 2 -->
+      <div class="page" data-index="2" style="z-index: 3;">
+        <div class="face paper-front">
+          <div>
+            <div class="chapter-label">Bab II • Soal Hati</div>
+            <h2 class="page-heading">Ngak papa jika masih sakit hati.</h2>
+            <p class="page-text">
+              Aku juga tahu hati kamu lagi patah dan belum pulih. Patah hati itu memang njengkelno,hal-hal kecil terasa kek anjir berat bngt wkwk.
+            </p>
+            <p class="page-text">
+              kmu ngak perlu buru-buru sembuh hari ini, dan ngak perlu pura-pura tegar di depanku. Kita memang ngak punya label yang ribet, tapi buat aku, kamu tetap orang yang paling tak pedulikan wkwk
+            </p>
+            <div class="handwritten">
+              "Sembuhnya pelan-pelan aja, nggak ada deadline-nya kok wkwk."
+            </div>
+          </div>
+          <div class="page-footer">
+            <span>Halaman 2</span>
+            <span>Ketuk untuk lanjut →</span>
+          </div>
+        </div>
+        <div class="face back"></div>
+      </div>
+
+      <!-- HALAMAN 3 -->
+      <div class="page" data-index="3" style="z-index: 2;">
+        <div class="face paper-front">
+          <div>
+            <div class="chapter-label">Bab III • Tempat Singgah</div>
+            <h2 class="page-heading">Kalau kepala mulai pusing lagi...</h2>
+            <p class="page-text">
+              Nanti kalau kmu pusing lagi atau lagi gk mood bilang ajaa yaa🤣
+            </p>
+            <p class="page-text">
+              ngak usah mikirin apa-apa, dan nggak perlu ngerasa punya beban berlebih. Kalau butuh temen cerita, butuh pelarian sebentar dari realita, atau cuma pengen ditemenin diem chat aja gpp wkwk
+            </p>
+          </div>
+          <div class="page-footer">
+            <span>Halaman 3</span>
+            <span>Ketuk untuk lanjut →</span>
+          </div>
+        </div>
+        <div class="face back"></div>
+      </div>
+
+      <!-- HALAMAN 4 (TERAKHIR) -->
+      <div class="page" data-index="4" style="z-index: 1;">
+        <div class="face paper-front">
+          <div>
+            <div class="chapter-label">Halaman Terakhir • Hari Ini</div>
+            <h2 class="page-heading">Selamat menjalani hari, ya.</h2>
+            <p class="page-text">
+              Jangan lupa sarapan, minum air putih, dan kasih sedikit apresiasi ke diri kamu sendiri karena sudah bertahan sejauh ini meskipun lagi capek-capeknya wkwk
+            </p>
+            <p class="page-text">
+              Semoga hari ini semesta lebih ramah ke kam
+            </p>
+            <button class="secret-btn" id="openSecretBtn">Buka ini dong Anne 😘✉️</button>
+          </div>
+          <div class="page-footer">
+            <span>Halaman 4</span>
+            <span>— Dari aku</span>
+          </div>
+        </div>
+        <div class="face back"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="nav-btn" id="prevBtn" disabled>← Sebelumnya</button>
+    <span class="page-indicator" id="indicator">Sampul</span>
+    <button class="nav-btn" id="nextBtn">Lanjut →</button>
+  </div>
+
+  <!-- Pop-up Catatan Kecil -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="note-card">
+      <h3>Pesan Buat kau, dari rohman😎</h3>
+      <p>
+        Kalau nanti sore atau malam kepala kamu penuh lagi gara-gara kuliah atau yang lain, kabari aku ya wkwk. oiya kmu lgi gada kelas yak wkwk, selamat beristirahat Anne🥰,btw aku jg lagi libur nih wkwk
+      </p>
+      <button class="close-note" id="closeModalBtn">Simpan di hati</button>
+    </div>
+  </div>
+
+  <script>
+    // === LOGIKA PEMUTAR LAGU (Coldplay - Yellow) ===
+    const YOUTUBE_VIDEO_ID = 'q7mlB-adMBc';
+    const musicToggleBtn = document.getElementById('musicToggleBtn');
+    const vinylDisc = document.getElementById('vinylDisc');
+    const musicStatus = document.getElementById('musicStatus');
+    const localAudio = document.getElementById('localAudio');
+
+    let ytPlayer = null;
+    let ytReady = false;
+    let hasLocalAudio = false;
+    let isPlaying = false;
+    let userManuallyPaused = false;
+
+    localAudio.addEventListener('loadedmetadata', () => {
+      hasLocalAudio = true;
+    });
+
+    function setPlayingUI(playing) {
+      isPlaying = playing;
+      if (playing) {
+        vinylDisc.classList.add('playing');
+        musicToggleBtn.textContent = '❚❚ Jeda';
+        musicStatus.textContent = 'Sedang mengalun menemani pagi...';
+      } else {
+        vinylDisc.classList.remove('playing');
+        musicToggleBtn.textContent = '▶ Putar';
+        musicStatus.textContent = '"Look at the stars, look how they shine for you..."';
+      }
+    }
+
+    // Muat YouTube IFrame API
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+
+    window.onYouTubeIframeAPIReady = function () {
+      const playerVars = {
+        autoplay: 0,
+        controls: 0,
+        loop: 1,
+        playlist: YOUTUBE_VIDEO_ID,
+        playsinline: 1
+      };
+      if (window.location.protocol.startsWith('http')) {
+        playerVars.origin = window.location.origin;
+      }
+
+      ytPlayer = new YT.Player('ytPlayer', {
+        height: '1',
+        width: '1',
+        videoId: YOUTUBE_VIDEO_ID,
+        playerVars: playerVars,
+        events: {
+          onReady: () => {
+            ytReady = true;
+          },
+          onStateChange: (event) => {
+            if (event.data === YT.PlayerState.PLAYING) {
+              setPlayingUI(true);
+            } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+              setPlayingUI(false);
+            }
+          }
+        }
+      });
+    };
+
+    function playMusic() {
+      if (hasLocalAudio) {
+        localAudio.play().then(() => setPlayingUI(true)).catch(() => {});
+        return;
+      }
+      if (ytReady && ytPlayer && typeof ytPlayer.playVideo === 'function') {
+        ytPlayer.setVolume(75);
+        ytPlayer.playVideo();
+        setPlayingUI(true);
+      }
+    }
+
+    function pauseMusic() {
+      if (hasLocalAudio) {
+        localAudio.pause();
+        setPlayingUI(false);
+        return;
+      }
+      if (ytReady && ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
+        ytPlayer.pauseVideo();
+        setPlayingUI(false);
+      }
+    }
+
+    musicToggleBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        userManuallyPaused = true;
+        pauseMusic();
+      } else {
+        userManuallyPaused = false;
+        playMusic();
+      }
+    });
+
+    // === LOGIKA BUKU 3D ===
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const indicator = document.getElementById('indicator');
+    const openSecretBtn = document.getElementById('openSecretBtn');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    let currentPage = 0;
+    const totalPages = pages.length;
+
+    function updateControls() {
+      prevBtn.disabled = currentPage === 0;
+      nextBtn.disabled = currentPage === totalPages - 1;
+      indicator.textContent = currentPage === 0 ? 'Sampul' : `Hal. ${currentPage} / ${totalPages - 1}`;
+    }
+
+    function flipForward() {
+      if (currentPage >= totalPages - 1) return;
+
+      // Otomatis mulai lagu saat sampul pertama kali dibuka
+      if (currentPage === 0 && !isPlaying && !userManuallyPaused) {
+        playMusic();
+      }
+
+      const page = pages[currentPage];
+      page.style.zIndex = totalPages + currentPage;
+      page.classList.add('flipped');
+
+      const settledIndex = currentPage + 1;
+      setTimeout(() => {
+        page.style.zIndex = settledIndex;
+      }, 450);
+
+      currentPage++;
+      updateControls();
+    }
+
+    function flipBackward() {
+      if (currentPage <= 0) return;
+      currentPage--;
+      const page = pages[currentPage];
+      page.style.zIndex = totalPages + (totalPages - currentPage);
+      page.classList.remove('flipped');
+
+      const defaultZ = totalPages - currentPage;
+      setTimeout(() => {
+        page.style.zIndex = defaultZ;
+      }, 450);
+
+      updateControls();
+    }
+
+    pages.forEach((page, idx) => {
+      page.addEventListener('click', (e) => {
+        if (e.target.closest('button')) return;
+        if (idx === currentPage) {
+          flipForward();
+        }
+      });
+    });
+
+    nextBtn.addEventListener('click', flipForward);
+    prevBtn.addEventListener('click', flipBackward);
+
+    openSecretBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      modalOverlay.classList.add('active');
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+      modalOverlay.classList.remove('active');
+    });
+
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        modalOverlay.classList.remove('active');
+      }
+    });
+
+    let touchStartX = 0;
+    document.getElementById('book').addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    document.getElementById('book').addEventListener('touchend', (e) => {
+      const diff = touchStartX - e.changedTouches[0].screenX;
+      if (Math.abs(diff) > 45) {
+        if (diff > 0) flipForward();
+        else flipBackward();
+      }
+    }, { passive: true });
+  </script>
+</body>
+</html>
